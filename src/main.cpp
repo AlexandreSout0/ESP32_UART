@@ -1,4 +1,3 @@
-
 #include <arduino.h>
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
@@ -46,28 +45,34 @@ void uart_init(int baudRate, int tx_io_num, int rx_io_num, uart_port_t uart_num)
 
 }
 
-void uart_read(void *arg)
+char* uartData()
 {
-    // Configure a temporary buffer for the incoming data
     uint8_t *data = (uint8_t *) malloc(BUF_SIZE);
-    while (1) 
-    {
-        // Read data from the UART
-        int len = uart_read_bytes(UART_NUM_0, data, BUF_SIZE, 20 / portTICK_RATE_MS);
-        // Write data back to the UART
-        uart_write_bytes(UART_NUM_0, (const char *) data, len);
+    int len = uart_read_bytes(UART_NUM_0, data, BUF_SIZE, 20 / portTICK_RATE_MS);
+  
+    if (len > 0) {
+      data[len] = 0;
+      uart_write_bytes(UART_NUM_0, (const char *) data, len);
+      char* output = (char *) data;
+      free(data);
+      return output;
     }
+
+    return nullptr;
 }
+
 
 
 
 void setup()
 {
   uart_init(115200, GPIO_NUM_1, GPIO_NUM_3, UART_NUM_0);
-  xTaskCreate(uart_read, "uart read term", 2048, NULL, 10, NULL);
 }
 
 void loop()
 {
-  //vTaskDelay(1000 / portTICK_PERIOD_MS);
+  
+  char *teste = uartData();
+
+  vTaskDelay(1000 / portTICK_PERIOD_MS);
 }
