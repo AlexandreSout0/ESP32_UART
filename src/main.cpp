@@ -67,12 +67,17 @@ char* uartData()
 void setup()
 {
   uart_init(115200, GPIO_NUM_1, GPIO_NUM_3, UART_NUM_0);
+  pinMode(13,OUTPUT);
+  pinMode(14,OUTPUT);
 }
 
 void loop()
 {
   
-  char *teste = uartData();
+  //char *teste = uartData();
 
-  vTaskDelay(1000 / portTICK_PERIOD_MS);
+  digitalWrite(13,HIGH);
+  digitalWrite(14,HIGH);
+
+  vTaskDelay(100 / portTICK_PERIOD_MS);
 }
